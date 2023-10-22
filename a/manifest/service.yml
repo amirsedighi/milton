@@ -1,0 +1,30 @@
+# Service
+# In Kubernetes, a Service is a method for exposing a network application
+#  that is running as one or more Pods in your cluster.
+#
+# A key aim of Services in Kubernetes is that you don't need to modify your
+#  existing application to use an unfamiliar service discovery mechanism.
+#
+# You can run code in Pods, whether this is a code designed for a cloud-native
+#  world, or an older app you've containerized. You use a Service to make that
+# set of Pods available on the network so that clients can interact with it.
+#
+# Pods are ephemeral resources. Each Pod gets its own IP address.
+#  For a given Deployment in your cluster, the set of Pods running in one moment
+#  in time could be different from the set of Pods running that application
+#  a moment later.
+
+apiVersion: v1				# Kubernetes API version
+kind: Service 				# Kubernetes resource kind we are creating
+metadata: 				# Metadata of the resource kind we are creating
+  name: alpha-ms-svc  		# The service name. Could be seen using
+  namespace: milton
+spec:
+  selector:
+    app: alpha-ms    		# Pods targeted by this service
+  ports:
+    - protocol: "TCP"
+      port: 8080 			# The port that the service is running on in the cluster
+      targetPort: 8080 			# The port exposed by the service
+
+  type: LoadBalancer 			# type of the service. LoadBalancer indicates that our service will be external.

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <Properties>
+        <Property name="LOG_PATTERN">%d %p %logger{63}:%L %m %X{traceId} %X{spanId} %n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="io.meshk.milton" level="ALL" additivity="false">
+            <AppenderRef ref="LogToConsole" />
+        </Logger>
+
+        <Root level="error">
+            <AppenderRef ref="LogToConsole" />
+        </Root>
+    </Loggers>
+</configuration>
