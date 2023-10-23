@@ -17,11 +17,11 @@
 apiVersion: v1				# Kubernetes API version
 kind: Service 				# Kubernetes resource kind we are creating
 metadata: 				# Metadata of the resource kind we are creating
-  name: alpha-ms-svc  		# The service name. Could be seen using
+  name: stream-alpha-ms-svc  		# The service name. Could be seen using
   namespace: milton
 spec:
   selector:
-    app: alpha-ms    		# Pods targeted by this service
+    app: stream-alpha-ms    		# Pods targeted by this service
   ports:
     - protocol: "TCP"
       port: 8080 			# The port that the service is running on in the cluster

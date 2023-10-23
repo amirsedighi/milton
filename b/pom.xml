@@ -19,11 +19,27 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-layout-template-json</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
 		<!-- Observability -->
@@ -32,11 +48,8 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-tracing-bridge-otel</artifactId>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>io.opentelemetry</groupId>-->
-		<!--			<artifactId>opentelemetry-exporter-otlp</artifactId>-->
-		<!--		</dependency>-->
 
+			<!-- Jaeger exporter -->
 		<dependency>
 			<groupId>io.opentelemetry</groupId>
 			<artifactId>opentelemetry-exporter-jaeger</artifactId>
@@ -50,12 +63,6 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.projectlombok</groupId>-->
-<!--			<artifactId>lombok</artifactId>-->
-<!--			<optional>true</optional>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -66,6 +73,14 @@
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.13.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

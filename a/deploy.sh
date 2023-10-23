@@ -13,14 +13,14 @@ kubectl create namespace milton
 
 eval $(minikube docker-env)
 echo DELETE deployment
-kubectl delete -n milton deployment alpha-ms
+kubectl delete -n milton deployment stream-alpha-ms
 
 sleep 7
 
 eval $(minikube docker-env)
 
 echo DELETE Image
-docker image rm milton-alpha-ms-img
+docker image rm milton-stream-alpha-ms-img
 
 sleep 1
 
@@ -31,7 +31,7 @@ mvn clean install -DskipTests
 eval $(minikube docker-env)
 
 echo BUILD Image
-docker build -t milton-alpha-ms-img .
+docker build -t milton-stream-alpha-ms-img .
  
 sleep 1
 
