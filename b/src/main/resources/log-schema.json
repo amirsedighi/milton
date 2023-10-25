@@ -1,5 +1,5 @@
 {
-  "trace": {
+  "mdc": {
     "$resolver": "mdc"
   },
   "exceptionClass": {

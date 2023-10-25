@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,9 +26,9 @@ public class HttpClient {
         String uri = gammaUrl +"/push/" + msg ;
         logger.info("calling {}", uri);
         String result = restTemplate.getForObject(uri, String.class);
+        logger.info("result");
 
     }
-
 
     public void process(String msg)
     {
@@ -35,7 +36,19 @@ public class HttpClient {
         String uri = gammaUrl +"/hello?" + msg;
         logger.info("calling ... {}", uri);
         String result = restTemplate.getForObject(uri, String.class);
+        logger.info(result);
 
     }
+
+    //Scheduled(fixedDelay = 10000)
+    public void background()
+    {
+        String uri = gammaUrl +"/hello?" + "CRON";
+        logger.info("calling ... {}", uri);
+        String result = restTemplate.getForObject(uri, String.class);
+        logger.info(result);
+
+    }
+
 
 }

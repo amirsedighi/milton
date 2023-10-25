@@ -54,6 +54,7 @@ public class KafkaConfig {
 
         factory.getContainerProperties().setMicrometerEnabled(true);
         factory.getContainerProperties().setObservationEnabled(true);
+
         factory.setConsumerFactory(consumerFactory);
 
         return factory;
