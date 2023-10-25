@@ -19,7 +19,7 @@ public class HttpClient {
     @Value("${gamma.url}")
     String gammaUrl;
 
-    public void push(String msg)
+    public void ingest(String msg)
     {
         msg = msg + "_" + RandomStringUtils.randomNumeric(5).trim();
         String uri = gammaUrl +"/push/" + msg ;
