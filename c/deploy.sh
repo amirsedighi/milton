@@ -15,7 +15,7 @@ eval $(minikube docker-env)
 echo DELETE deployment
 kubectl delete -n milton deployment stream-gamma-ms
 
-sleep 2
+sleep 1
 
 eval $(minikube docker-env)
 
