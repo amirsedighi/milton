@@ -19,6 +19,7 @@ public class Consumer {
     {
         logger.info("{} received from Kafka", message);
         client.ingest(message);
+        client.background();
         client.process(message);
 
     }

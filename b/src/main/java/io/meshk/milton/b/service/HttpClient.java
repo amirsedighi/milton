@@ -40,10 +40,10 @@ public class HttpClient {
 
     }
 
-    //Scheduled(fixedDelay = 10000)
+    //Scheduled(fixedDelay = 5000)
     public void background()
     {
-        String uri = gammaUrl +"/hello?" + "CRON";
+        String uri = gammaUrl +"/xxxxxxllo?" + "CRON";
         logger.info("calling ... {}", uri);
         String result = restTemplate.getForObject(uri, String.class);
         logger.info(result);

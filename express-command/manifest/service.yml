@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-command-ms-svc
+  namespace: milton
+spec:
+  selector:
+    app: express-command-ms
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+
+  type: LoadBalancer
+
