@@ -13,16 +13,16 @@ kubectl create namespace milton
 
 eval $(minikube docker-env)
 echo DELETE deployment
-kubectl delete -n milton deployment express-command
+kubectl delete -n milton deployment express-command-ms
 
-sleep 1
+sleep 5
 
 eval $(minikube docker-env)
 
 echo DELETE Image
 docker image rm milton-express-command-ms-img --force
 
-sleep 1
+sleep 5
 
 echo COMPILE
 mvn clean install -DskipTests
@@ -32,10 +32,16 @@ eval $(minikube docker-env)
 
 echo BUILD Image
 docker build -t milton-express-command-ms-img .
+
+# sleep 1
+
+# echo RBAC configuration
+
+# kubectl apply -f ./manifest/kubernetes-rbac.yml
  
 sleep 1
 
 echo DEPLOY Container
-kubectl apply -f ./manifest
+kubectl apply -f ./manifest/deployment.yml
 
-
+kubectl apply -f ./manifest/service.yml

@@ -1,8 +1,6 @@
 package io.meshk.milton.command.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -10,7 +8,8 @@ import java.time.LocalDate;
 public class Permission {
 
     @Id
-    //GeneratedValue(strategy = GenerationType.IDENTITY)
+//    //GeneratedValue(strategy = GenerationType.IDENTITY)
+//    GeneratedValue(strategy = GenerationType.AUTO)
     @SequenceGenerator(name = "permissionSeqGen", sequenceName = "permissionSequence", initialValue = 1, allocationSize = 1)
     @GeneratedValue(generator = "permissionSeqGen")
     private Long id;
@@ -19,7 +18,7 @@ public class Permission {
 
     private String description;
 
-    private LocalDate publishDate;
+    private LocalDate publishdate;
 
     public Long getId() {
         return id;
@@ -41,12 +40,12 @@ public class Permission {
         this.description = description;
     }
 
-    public LocalDate getPublishDate() {
-        return publishDate;
+    public LocalDate getPublishdate() {
+        return publishdate;
     }
 
-    public void setPublishDate(LocalDate publishDate) {
-        this.publishDate = publishDate;
+    public void setPublishDate(LocalDate d) {
+        this.publishdate = publishdate;
     }
 
     public Permission() {

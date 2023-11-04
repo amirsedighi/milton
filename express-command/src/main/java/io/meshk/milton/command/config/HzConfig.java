@@ -8,11 +8,11 @@ public class HzConfig {
     @Bean
     Config config() {
         Config config = new Config();
-        config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(false);
+        config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
         config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-        config.getNetworkConfig().getJoin().getKubernetesConfig().setEnabled(true)
-                .setProperty("namespace", "default")
-                .setProperty("service-name", "hazelcast-service");
+//        config.getNetworkConfig().getJoin().getKubernetesConfig().setEnabled(true)
+//                .setProperty("namespace", "default")
+//                .setProperty("service-name", "hazelcast-service");
         return config;
     }
 

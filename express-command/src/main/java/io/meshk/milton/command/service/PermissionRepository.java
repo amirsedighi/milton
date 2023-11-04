@@ -13,7 +13,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
     List<Permission> findByTitle(String title);
 
     // Custom query
-    @Query("SELECT p FROM Permission p WHERE p.publishDate > :date")
+    @Query("SELECT p FROM Permission p WHERE p.publishdate > :date")
     List<Permission> findByPublishedDateAfter(@Param("date") LocalDate date);
 
 }

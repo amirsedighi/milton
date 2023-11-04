@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: express-command
+  name: express-command-ms
   namespace: milton
 spec:
   selector:
