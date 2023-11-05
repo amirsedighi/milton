@@ -1,0 +1,8 @@
+hazelcast:
+  cluster-name: imdg-cluster # Whatever name is ok - the HZ Instance will be initiated under this name
+  network:
+    join:
+      multicast:
+        enabled: false
+      kubernetes:
+        enabled: true

@@ -4,11 +4,13 @@ metadata:
   name: express-command-ms-svc
   namespace: milton
 spec:
+  type: LoadBalancer
   selector:
     app: express-command-ms
   ports:
-    - protocol: "TCP"
+    - name: hazelcast
+      port: 5701
+    - name: app
       port: 8080
+      protocol: "TCP"
       targetPort: 8080
-  type: LoadBalancer
-

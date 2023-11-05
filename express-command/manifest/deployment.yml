@@ -4,10 +4,10 @@ metadata:
   name: express-command-ms
   namespace: milton
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: express-command-ms
-  replicas: 1
   template:
     metadata:
       labels:
@@ -22,6 +22,5 @@ spec:
           image: milton-express-command-ms-img
           imagePullPolicy: Never  	# another option is IfNotPresent
           ports:
+            - containerPort: 5701
             - containerPort: 8080
-            - name: multicast
-              containerPort: 5701

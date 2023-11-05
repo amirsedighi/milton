@@ -33,15 +33,16 @@ eval $(minikube docker-env)
 echo BUILD Image
 docker build -t milton-express-command-ms-img .
 
-# sleep 1
+sleep 1
 
-# echo RBAC configuration
+echo RBAC configuration
 
-# kubectl apply -f ./manifest/kubernetes-rbac.yml
+kubectl apply -f ./manifest/rbac.yml
  
 sleep 1
 
-echo DEPLOY Container
-kubectl apply -f ./manifest/deployment.yml
 
-kubectl apply -f ./manifest/service.yml
+kubectl apply -f ./manifest/rbac.yml
+
+echo DEPLOY Container
+kubectl apply -f ./manifest

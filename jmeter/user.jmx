@@ -43,7 +43,7 @@
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
-          <stringProp name="HTTPSampler.port">49417</stringProp>
+          <stringProp name="HTTPSampler.port">51509</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/users</stringProp>
