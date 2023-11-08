@@ -4,7 +4,7 @@ metadata:
   name: express-command-ms
   namespace: milton
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: express-command-ms

@@ -6,3 +6,10 @@ hazelcast:
         enabled: false
       kubernetes:
         enabled: true
+  serialization:
+    portable-version: 0
+    use-native-byte-order: false
+    byte-order: BIG_ENDIAN
+    data-serializable-factories:
+      - factory-id: 1
+        class-name: io.meshk.milton.command.serde.DataFactory

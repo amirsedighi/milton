@@ -1,7 +1,6 @@
-INSERT:
 
-curl -X POST -H "Content-Type: application/json" -d '{"title":"Book E", "description":"This is just a description", "publishdate":"2023-04-01"}' "http://localhost:8080/permissions"
+Scale Out:
+kubectl scale --replicas=2 deployment express-command-ms -n milton
 
-
-http://localhost:8080/permissions/1
-http://localhost:8080/permissions/imdg/1
+Reload All:
+curl http://localhost:62144/control/reloadall

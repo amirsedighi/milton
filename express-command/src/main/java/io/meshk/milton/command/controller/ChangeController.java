@@ -2,6 +2,7 @@ package io.meshk.milton.command.controller;
 
 
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
 import io.meshk.milton.command.model.Permission;
 import io.meshk.milton.command.model.User;
 import io.meshk.milton.command.service.PermissionService;
@@ -17,7 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentMap;
 
 @RestController
 @RequestMapping("/changes")
@@ -34,21 +34,14 @@ public class ChangeController {
     private UserService userService;
 
 
-    @Value("${imdg.distributed.map.permission:express}")
-    String distributedPermissionMap;
+    @Value("${imdg.distributed.map.user:express}")
+    String distributedUserMap;
 
 
-    private ConcurrentMap<Long, Permission> disributedPermissions() {
-        return imdg.getMap(distributedPermissionMap);
+    private IMap<Long, User> distributedUsers() {
+        return imdg.getMap(distributedUserMap);
     }
 
-
-    @Value("${imdg.distributed.map.user:express_user}")
-    String distributedMap;
-
-    private ConcurrentMap<Long, User> distributedUsers() {
-        return imdg.getMap(distributedMap);
-    }
 
     @PutMapping
     public Permission grant(@RequestParam Long permissionId, @RequestParam Long userId) {
@@ -57,6 +50,7 @@ public class ChangeController {
             Optional<User> newUser = userService.findById(userId);
             newUser.get().getPermissions().add(newPermission.get());
             userService.save(newUser.get());
+            distributedUsers().put(userId, newUser.get());
             log.info("Permission Granted - userId: {}, permissionId: {}", userId, permissionId);
         }
         return newPermission.get();
@@ -74,6 +68,7 @@ public class ChangeController {
                     for (Permission perm : permissions){
                         if (perm.getId().equals(permissionId)) {
                             newUser.get().getPermissions().remove(perm);
+                            distributedUsers().remove(userId, permissionId);
                             userService.save(newUser.get());
                             log.info("Permission Revoked - userId: {}, permissionId: {}", userId, permissionId);
                         }

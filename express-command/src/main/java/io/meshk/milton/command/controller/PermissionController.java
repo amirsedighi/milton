@@ -1,7 +1,9 @@
 package io.meshk.milton.command.controller;
 
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
 import io.meshk.milton.command.model.Permission;
+import io.meshk.milton.command.model.User;
 import io.meshk.milton.command.service.PermissionService;
 import io.meshk.milton.command.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentMap;
 
 @RestController
 @RequestMapping("/permissions")
@@ -26,7 +27,7 @@ public class PermissionController {
     @Value("${imdg.distributed.map.permission:express}")
     String distributedPermissionMap;
 
-    private ConcurrentMap<Long,Permission> disributedPermissions() {
+    private IMap<Long,Permission> disributedPermissions() {
         return imdg.getMap(distributedPermissionMap);
     }
 
@@ -59,7 +60,7 @@ public class PermissionController {
     public Permission create(@RequestBody Permission permission) {
         Permission newPermission = permissionService.save(permission);
         log.info("permission created - id: {}", String.valueOf(newPermission.getId()));
-        disributedPermissions().put(newPermission.getId(), permission);
+        disributedPermissions().put(newPermission.getId(), newPermission);
         return newPermission;
     }
 
@@ -67,7 +68,7 @@ public class PermissionController {
     public Permission update(@RequestBody Permission permission) {
         log.info("update called id: {}", String.valueOf(permission.getId()));
         Permission newPermission = permissionService.save(permission);
-        disributedPermissions().put(newPermission.getId(), permission);
+        disributedPermissions().put(newPermission.getId(), newPermission);
         return newPermission;
     }
 
@@ -88,5 +89,18 @@ public class PermissionController {
             @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         return permissionService.findByPublishedDateAfter(date);
     }
+
+
+    @GetMapping("reload")
+    public Integer reload() {
+        log.info("reloading permissions is in progress");
+        int i = 0;
+        for (Permission perm : permissionService.findAll()){
+            disributedPermissions().put(perm.getId(), perm);
+            i++;
+        }
+        return i;
+    }
+
 
 }
