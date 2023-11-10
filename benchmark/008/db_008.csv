@@ -1,0 +1,3 @@
+Label,# Samples,Average,Median,90% Line,95% Line,99% Line,Min,Max,Error %,Throughput,Received KB/sec,Sent KB/sec
+1. HTTP GET USER (60K records) Random ID,8000,33,46,48,50,53,4,107,0.000%,235.89774,188.00,29.44
+TOTAL,8000,33,46,48,50,53,4,107,0.000%,235.89774,188.00,29.44

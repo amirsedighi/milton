@@ -3,9 +3,8 @@ package io.meshk.milton.command.controller;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import io.meshk.milton.command.model.Permission;
-import io.meshk.milton.command.model.User;
-import io.meshk.milton.command.service.PermissionService;
-import io.meshk.milton.command.service.UserService;
+import io.meshk.milton.command.service.datastore.PermissionService;
+import io.meshk.milton.command.service.datastore.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,7 @@ public class PermissionController {
     @Value("${imdg.distributed.map.permission:express}")
     String distributedPermissionMap;
 
-    private IMap<Long,Permission> disributedPermissions() {
+    private IMap<Long,Permission> distributedPermissions() {
         return imdg.getMap(distributedPermissionMap);
     }
 
@@ -51,16 +50,15 @@ public class PermissionController {
     @GetMapping("/imdg/{id}")
     public Optional<Permission> findByIdByIMDG(@PathVariable Long id) {
         log.info("IMDG findById  called: {}", String.valueOf(id));
-        return Optional.ofNullable(disributedPermissions().get(id));
+        return Optional.ofNullable(distributedPermissions().get(id));
     }
-
 
     @ResponseStatus(HttpStatus.CREATED) // 201
     @PostMapping
     public Permission create(@RequestBody Permission permission) {
         Permission newPermission = permissionService.save(permission);
         log.info("permission created - id: {}", String.valueOf(newPermission.getId()));
-        disributedPermissions().put(newPermission.getId(), newPermission);
+        distributedPermissions().put(newPermission.getId(), newPermission);
         return newPermission;
     }
 
@@ -68,7 +66,7 @@ public class PermissionController {
     public Permission update(@RequestBody Permission permission) {
         log.info("update called id: {}", String.valueOf(permission.getId()));
         Permission newPermission = permissionService.save(permission);
-        disributedPermissions().put(newPermission.getId(), newPermission);
+        distributedPermissions().put(newPermission.getId(), newPermission);
         return newPermission;
     }
 
@@ -76,7 +74,7 @@ public class PermissionController {
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
         permissionService.deleteById(id);
-        disributedPermissions().remove(id);
+        distributedPermissions().remove(id);
     }
 
     @GetMapping("/find/title/{title}")
@@ -96,7 +94,7 @@ public class PermissionController {
         log.info("reloading permissions is in progress");
         int i = 0;
         for (Permission perm : permissionService.findAll()){
-            disributedPermissions().put(perm.getId(), perm);
+            distributedPermissions().put(perm.getId(), perm);
             i++;
         }
         return i;

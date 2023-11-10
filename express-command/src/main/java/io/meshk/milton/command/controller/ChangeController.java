@@ -5,17 +5,15 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import io.meshk.milton.command.model.Permission;
 import io.meshk.milton.command.model.User;
-import io.meshk.milton.command.service.PermissionService;
-import io.meshk.milton.command.service.UserService;
+import io.meshk.milton.command.service.datastore.PermissionService;
+import io.meshk.milton.command.service.datastore.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,9 +35,16 @@ public class ChangeController {
     @Value("${imdg.distributed.map.user:express}")
     String distributedUserMap;
 
-
     private IMap<Long, User> distributedUsers() {
         return imdg.getMap(distributedUserMap);
+    }
+
+    @Value("${imdg.distributed.map.user-permissions:express_user_permissions}")
+    String distributedUserPermissionsMap;
+
+
+    private IMap<Long, Collection<Long>> distributedUserPermissions() {
+        return imdg.getMap(distributedUserPermissionsMap);
     }
 
 
@@ -50,7 +55,7 @@ public class ChangeController {
             Optional<User> newUser = userService.findById(userId);
             newUser.get().getPermissions().add(newPermission.get());
             userService.save(newUser.get());
-            distributedUsers().put(userId, newUser.get());
+            distributedUserPermissions().get(userId).add(permissionId);
             log.info("Permission Granted - userId: {}, permissionId: {}", userId, permissionId);
         }
         return newPermission.get();
@@ -59,22 +64,22 @@ public class ChangeController {
     @DeleteMapping
     public User revoke(@RequestParam Long permissionId, @RequestParam Long userId) {
 
-            Optional<User> newUser = userService.findById(userId);
-            if (!newUser.isEmpty()){
-                if (!newUser.get().getPermissions().isEmpty()){
-                    List<Permission> permissions = new ArrayList<>();
-                    permissions.addAll(newUser.get().getPermissions());
+        Optional<User> newUser = userService.findById(userId);
+        if (!newUser.isEmpty()){
+            if (!newUser.get().getPermissions().isEmpty()){
+                List<Permission> permissions = new ArrayList<>();
+                permissions.addAll(newUser.get().getPermissions());
 
-                    for (Permission perm : permissions){
-                        if (perm.getId().equals(permissionId)) {
-                            newUser.get().getPermissions().remove(perm);
-                            distributedUsers().remove(userId, permissionId);
-                            userService.save(newUser.get());
-                            log.info("Permission Revoked - userId: {}, permissionId: {}", userId, permissionId);
-                        }
+                for (Permission perm : permissions){
+                    if (perm.getId().equals(permissionId)) {
+                        newUser.get().getPermissions().remove(perm);
+                        distributedUserPermissions().get(userId).remove(permissionId);
+                        userService.save(newUser.get());
+                        log.info("Permission Revoked - userId: {}, permissionId: {}", userId, permissionId);
                     }
                 }
             }
+        }
 
 
         return newUser.get();

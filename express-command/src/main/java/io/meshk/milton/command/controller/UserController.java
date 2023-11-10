@@ -3,21 +3,17 @@ package io.meshk.milton.command.controller;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.hazelcast.query.Predicate;
-import com.hazelcast.query.PredicateBuilder;
 import com.hazelcast.query.Predicates;
+import io.meshk.milton.command.model.Permission;
 import io.meshk.milton.command.model.User;
-import io.meshk.milton.command.service.UserService;
+import io.meshk.milton.command.service.datastore.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -34,6 +30,24 @@ public class UserController {
         return imdg.getMap(distributedUserMap);
     }
 
+
+    @Value("${imdg.distributed.map.user-permissions:express_user_permissions}")
+    String distributedUserPermissionsMap;
+
+
+    private IMap<Long, Set<Long>> distributedUserPermissions() {
+        return imdg.getMap(distributedUserPermissionsMap);
+    }
+
+
+    @Value("${imdg.distributed.map.permission:express}")
+    String distributedPermissionMap;
+
+    private IMap<Long,Permission> disributedPermissions() {
+        return imdg.getMap(distributedPermissionMap);
+    }
+
+
     @Autowired
     private UserService userService;
 
@@ -44,16 +58,32 @@ public class UserController {
 
     @GetMapping("/{id}")
     public Optional<User> findById(@PathVariable Long id) {
-        log.warn("---------------- findById  called: {}", String.valueOf(id));
+        log.info("---------------- findById  called: {}", String.valueOf(id));
         return userService.findById(id);
     }
 
     @GetMapping("/imdg/{id}")
     public Optional<User> findByIdByIMDG(@PathVariable Long id) {
-        log.warn("---------------- findByIdByIMDG  called: {}", String.valueOf(id));
+        log.info("---------------- findByIdByIMDG  called: {}", String.valueOf(id));
         return Optional.ofNullable(distributedUsers().get(id));
     }
 
+
+    @GetMapping("/imdg/deep/{id}")
+    public Optional<User> findByIdByIMDGDeep(@PathVariable Long id) {
+        log.info("---------------- findByIdByIMDGDeep, called: {}", String.valueOf(id));
+        User user = distributedUsers().get(id);
+        if (distributedUserPermissions().get(id)==null || distributedUserPermissions().get(id).isEmpty()){
+            return Optional.ofNullable(user);
+        } else {
+            Set<Permission> perms = new HashSet<>();
+            for (Long permId : distributedUserPermissions().get(id)){
+                perms.add(disributedPermissions().get(permId));
+            }
+            user.setPermissions(new HashSet<>(perms));
+        }
+        return Optional.ofNullable(user);
+    }
 
 
 
@@ -61,7 +91,7 @@ public class UserController {
     @PostMapping
     public User create(@RequestBody User user) {
         User newUser = userService.save(user);
-        log.warn("user created - id: {}", String.valueOf(newUser.getId()));
+        log.info("user created - id: {}", String.valueOf(newUser.getId()));
         distributedUsers().put(newUser.getId(), newUser);
         return newUser;
     }
@@ -83,18 +113,43 @@ public class UserController {
 
     @GetMapping("/find/username/{username}")
     public List<User> findByUsername(@PathVariable String username) {
+
+        log.info("/find/username/{}", username);
+
         return userService.findByUsername(username);
     }
 
-    @GetMapping("/find-imdg/username/{useranme}")
+    @GetMapping("/imdg/find/username/{useranme}")
     public Optional<Collection<User>> findByUsernameImdg(@PathVariable String useranme) {
-        Predicate predicate = Predicates.sql("username like "+useranme+"%");
-        log.info("/find-imdg/username like "+useranme+"%");
+        Predicate predicate = Predicates.sql("username like %"+useranme+"%");
+        log.info("/imdg/find/username/ like %"+useranme+"%");
         Collection<User> filtered = distributedUsers().values(predicate);
         return Optional.ofNullable(filtered);
     }
 
-//    @GetMapping("/find/birthdate-after/{date}")
+    @GetMapping("/imdg/deep/find/username/{useranme}")
+    public Optional<Collection<User>> findByUsernameImdgDeep(@PathVariable String useranme) {
+        Predicate predicate = Predicates.sql("username like %"+useranme+"%");
+        log.info("/imdg/deep/find/username like %"+useranme+"%");
+
+        Collection<User> filtered = distributedUsers().values(predicate);
+
+        Collection<User> resultSet = new HashSet<>();
+        for (User filteredUser : filtered){
+            if (distributedUserPermissions().get(filteredUser.getId())!=null && !distributedUserPermissions().get(filteredUser.getId()).isEmpty()){
+                Set<Permission> perms = new HashSet<>();
+                for (Long permId : distributedUserPermissions().get(filteredUser.getId())){
+                    perms.add(disributedPermissions().get(permId));
+                }
+                filteredUser.setPermissions(new HashSet<>(perms));
+            }
+            resultSet.add(filteredUser);
+
+        }
+        return Optional.ofNullable(resultSet);
+    }
+
+    //    @GetMapping("/find/birthdate-after/{date}")
 //    public List<User> findBirthdateAfter(
 //            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 //        return userService.findByPublishedDateAfter(date);
@@ -115,7 +170,12 @@ public class UserController {
         log.info("reloading users is in progress");
         int i = 0;
         for (User user : userService.findAll()){
+            Set<Long> usersPermissions = new HashSet();
+            for (Permission permission : user.getPermissions()){
+                usersPermissions.add(permission.getId());
+            }
             distributedUsers().put(user.getId(), user);
+            distributedUserPermissions().put(user.getId(), usersPermissions);
             i++;
         }
         return i;

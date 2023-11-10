@@ -1,4 +1,4 @@
-package io.meshk.milton.command.service;
+package io.meshk.milton.command.service.datastore;
 
 import io.meshk.milton.command.model.Permission;
 import io.meshk.milton.command.model.User;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findByUsername(String username);
+    List<User> findByUsernameContaining(String username);
 
     // Custom query
     @Query("SELECT u FROM User u WHERE u.birthdate > :bdate")

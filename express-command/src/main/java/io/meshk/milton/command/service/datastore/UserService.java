@@ -1,4 +1,4 @@
-package io.meshk.milton.command.service;
+package io.meshk.milton.command.service.datastore;
 
 import io.meshk.milton.command.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UserService {
     }
 
     public List<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameContaining(username);
     }
 
     public List<User> findByPublishedDateAfter(LocalDate date) {

@@ -1,4 +1,4 @@
-package io.meshk.milton.command.service;
+package io.meshk.milton.command.service.datastore;
 
 import io.meshk.milton.command.model.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
