@@ -149,6 +149,58 @@ public class UserController {
         return Optional.ofNullable(resultSet);
     }
 
+    @GetMapping("/imdg/deepp/find/username/{useranme}")
+    public Optional<Collection<User>> findByUsernameImdgDeepParallel(@PathVariable String useranme) {
+        Predicate predicate = Predicates.sql("username like %"+useranme+"%");
+        log.info("/imdg/deepp/find/username like %"+useranme+"%");
+
+        Collection<User> filtered = distributedUsers().values(predicate);
+
+        Collection<User> resultSet = new HashSet<>();
+
+        filtered.parallelStream().forEach((filteredUser) -> {
+            if (distributedUserPermissions().get(filteredUser.getId())!=null && !distributedUserPermissions().get(filteredUser.getId()).isEmpty()){
+                Set<Permission> perms = new HashSet<>();
+                for (Long permId : distributedUserPermissions().get(filteredUser.getId())){
+                    perms.add(disributedPermissions().get(permId));
+                }
+                filteredUser.setPermissions(new HashSet<>(perms));
+            }
+            resultSet.add(filteredUser);
+        });
+
+        return Optional.ofNullable(resultSet);
+    }
+
+
+    @GetMapping("/imdg/deepp2/find/username/{useranme}")
+    public Optional<Collection<User>> findByUsernameImdgDeepParallel2(@PathVariable String useranme) {
+        Predicate predicate = Predicates.sql("username like %"+useranme+"%");
+        log.info("/imdg/deepp2/find/username like %"+useranme+"%");
+
+        Collection<User> filtered = new HashSet<>();
+
+        Collection<User> resultSet = new HashSet<>();
+
+        imdg.getMap(distributedUserMap).entrySet().parallelStream().forEach((user) -> {
+            if (((User)user.getValue()).getUsername().contains(useranme)){
+                if (distributedUserPermissions().get(((User)user.getValue()).getId())!=null && !distributedUserPermissions().get(((User)user.getValue()).getId()).isEmpty()){
+                    Set<Permission> perms = new HashSet<>();
+                    for (Long permId : distributedUserPermissions().get(((User)user.getValue()).getId())){
+                        perms.add(disributedPermissions().get(permId));
+                    }
+                    ((User)user.getValue()).setPermissions(new HashSet<>(perms));
+                }
+                resultSet.add((User)user.getValue());
+
+            }
+        });
+
+
+        return Optional.ofNullable(resultSet);
+    }
+
+
     //    @GetMapping("/find/birthdate-after/{date}")
 //    public List<User> findBirthdateAfter(
 //            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
@@ -169,16 +221,15 @@ public class UserController {
     public Integer reload() {
         log.info("reloading users is in progress");
         int i = 0;
-        for (User user : userService.findAll()){
+        userService.findAll().parallelStream().forEach(user -> {
             Set<Long> usersPermissions = new HashSet();
             for (Permission permission : user.getPermissions()){
                 usersPermissions.add(permission.getId());
             }
             distributedUsers().put(user.getId(), user);
             distributedUserPermissions().put(user.getId(), usersPermissions);
-            i++;
-        }
-        return i;
+        });
+        return 0;
     }
 
 }

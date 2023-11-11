@@ -13,3 +13,9 @@ hazelcast:
     data-serializable-factories:
       - factory-id: 1
         class-name: io.meshk.milton.command.serde.DataFactory
+#  map:
+#    employees:
+#      indexes:
+#        - type: HASH
+#          attributes:
+#            - "username"
