@@ -1,0 +1,8 @@
+Label,# Samples,Average,Min,Max,Std. Dev.,Error %,Throughput,Received KB/sec,Sent KB/sec,Avg. Bytes
+A. IMDG Find User (60K) Random LIKE *abc*,2201,123,34,284,41.27,0.000%,3.66963,122.20,0.54,34099.4
+A. DB Find User (60K) Random LIKE *abc*,174,272,110,507,72.10,0.000%,.29029,9.36,0.04,33011.9
+B. IMDG Find User Wide (60K) Random LIKE *ab* - Wide,2201,383,219,847,51.02,0.000%,3.66802,4605.98,0.54,1285849.2
+C. IMDG Find User AND Lname Wide (60K) Random LIKE *ab*  - Wide,2198,310,31,829,130.80,0.000%,3.66767,3331.21,0.57,930061.4
+B. DB Find User Wide (60K) Random LIKE *ab* - Wide,174,5992,1525,7900,668.14,0.000%,.28963,363.19,0.04,1284088.6
+C. DB Find User AND Lname Wide (60K) Random LIKE *ab*  - Wide,172,4136,61,7578,2758.98,0.000%,.28957,249.35,0.04,881779.5
+TOTAL,7120,505,31,7900,1148.28,0.000%,11.84834,8662.26,1.76,748640.9

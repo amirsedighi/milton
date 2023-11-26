@@ -1,0 +1,5 @@
+Label,# Samples,Average,Median,90% Line,95% Line,99% Line,Min,Max,Error %,Throughput,Received KB/sec,Sent KB/sec
+A. IMDG Find User (60K) Random LIKE *abc*,2201,123,112,186,195,217,34,284,0.000%,3.66963,122.20,0.54
+B. IMDG Find User Wide (60K) Random LIKE *ab* - Wide,2201,383,389,429,473,505,219,847,0.000%,3.66802,4605.98,0.54
+C. IMDG Find User AND Lname Wide (60K) Random LIKE *ab*  - Wide,2198,310,379,416,468,501,31,829,0.000%,3.66767,3331.21,0.57
+TOTAL,6600,272,323,413,442,498,31,847,0.000%,10.99780,8054.19,1.64

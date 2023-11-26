@@ -1,0 +1,5 @@
+Label,# Samples,Average,Median,90% Line,95% Line,99% Line,Min,Max,Error %,Throughput,Received KB/sec,Sent KB/sec
+A. DB Find User (60K) Random LIKE *abc*,1000,85,93,99,100,107,55,164,0.000%,1.22187,40.41,0.17
+B. DB Find User Wide (60K) Random LIKE *ab* - Wide,1000,893,893,930,941,961,788,992,0.000%,1.22089,1531.04,0.17
+C. DB Find User AND Lname Wide (60K) Random LIKE *ab*  - Wide,1000,654,879,925,940,958,37,1005,0.000%,1.22214,1085.47,0.18
+TOTAL,3000,544,862,921,933,955,37,1005,0.000%,3.66162,2655.01,0.51
