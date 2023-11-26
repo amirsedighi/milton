@@ -12,10 +12,22 @@ hazelcast:
     byte-order: BIG_ENDIAN
     data-serializable-factories:
       - factory-id: 1
-        class-name: io.meshk.milton.command.serde.DataFactory
-#  map:
-#    employees:
-#      indexes:
+        class-name: io.meshk.milton.command.serdes.DataFactory
+  map:
+    express_user:
+      indexes:
+        - type: HASH
+          attributes:
+            - "username"
+        - attributes:
+            - "lname"
 #        - type: HASH
 #          attributes:
 #            - "username"
+#            - "lname"
+#      entry-listeners:
+#        - class-name: io.meshk.milton.command.listener.UserListener
+#          include-value: false
+#          local: false
+#      time-to-live-seconds: 60
+#      max-idle-seconds: 300

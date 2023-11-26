@@ -3,7 +3,7 @@ package io.meshk.milton.command.model;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.IdentifiedDataSerializable;
-import io.meshk.milton.command.serde.DataFactory;
+import io.meshk.milton.command.serdes.DataFactory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

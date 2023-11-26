@@ -1,4 +1,4 @@
-package io.meshk.milton.command.serde;
+package io.meshk.milton.command.serdes;
 
 import com.hazelcast.nio.serialization.DataSerializableFactory;
 import com.hazelcast.nio.serialization.IdentifiedDataSerializable;

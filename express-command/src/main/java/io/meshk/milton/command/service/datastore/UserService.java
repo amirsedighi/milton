@@ -33,6 +33,11 @@ public class UserService {
         return userRepository.findByUsernameContaining(username);
     }
 
+    public List<User> findByUsernameAndLname(String username, String lname) {
+        return userRepository.findByUsernameContainingAndLnameContaining(username, lname);
+    }
+
+
     public List<User> findByPublishedDateAfter(LocalDate date) {
         return userRepository.findByBirthdateAfter(date);
     }

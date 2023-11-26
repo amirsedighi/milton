@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/changes")
@@ -55,8 +52,14 @@ public class ChangeController {
             Optional<User> newUser = userService.findById(userId);
             newUser.get().getPermissions().add(newPermission.get());
             userService.save(newUser.get());
-            distributedUserPermissions().get(userId).add(permissionId);
+            Collection<Long> perms = distributedUserPermissions().get(userId);
+            if (perms==null) {
+                perms = new ArrayList<>();
+            }
+            perms.add(permissionId);
+            distributedUserPermissions().set(userId, perms);
             log.info("Permission Granted - userId: {}, permissionId: {}", userId, permissionId);
+            log.info("Users {}, permissions: {}", userId,  Arrays.toString(distributedUserPermissions().get(userId).toArray()));
         }
         return newPermission.get();
     }
@@ -73,7 +76,11 @@ public class ChangeController {
                 for (Permission perm : permissions){
                     if (perm.getId().equals(permissionId)) {
                         newUser.get().getPermissions().remove(perm);
-                        distributedUserPermissions().get(userId).remove(permissionId);
+                        log.info("IMDG Before revoke Users {}, permissions: {}", userId,  Arrays.toString(distributedUserPermissions().get(userId).toArray()));
+                        Collection<Long> perms = distributedUserPermissions().get(userId);
+                        perms.remove(permissionId);
+                        distributedUserPermissions().set(userId, perms);
+                        log.info("IMDG After remove Users {}, permissions: {}", userId,  Arrays.toString(distributedUserPermissions().get(userId).toArray()));
                         userService.save(newUser.get());
                         log.info("Permission Revoked - userId: {}, permissionId: {}", userId, permissionId);
                     }

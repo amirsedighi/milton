@@ -8,9 +8,9 @@ spec:
   selector:
     app: express-command-ms
   ports:
+    - name: app-listener
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
     - name: hazelcast
       port: 5701
-    - name: app
-      port: 8080
-      protocol: "TCP"
-      targetPort: 8080

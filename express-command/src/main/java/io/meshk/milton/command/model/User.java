@@ -3,7 +3,7 @@ package io.meshk.milton.command.model;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.IdentifiedDataSerializable;
-import io.meshk.milton.command.serde.DataFactory;
+import io.meshk.milton.command.serdes.DataFactory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.hazelcast.internal.serialization.impl.SerializationUtil.writeNullableList;
 import static io.meshk.milton.command.util.Constants.DATE_FORMAT;
 
 @Entity

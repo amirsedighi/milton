@@ -39,10 +39,6 @@ echo RBAC configuration
 
 kubectl apply -f ./manifest/rbac.yml
  
-sleep 1
-
-
-kubectl apply -f ./manifest/rbac.yml
 
 echo DEPLOY Container
 kubectl apply -f ./manifest
