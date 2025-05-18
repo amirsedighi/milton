@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: stream-gamma-ms
-          image: milton-gamma-ms-img 	# Image that will be used to containers in the cluster
+          image: milton-stream-gamma-ms-img 	# Image that will be used to containers in the cluster
           imagePullPolicy: Never  	# another option is IfNotPresent
           ports:
             - containerPort: 8080 	# The port that the container is running on in the cluster
