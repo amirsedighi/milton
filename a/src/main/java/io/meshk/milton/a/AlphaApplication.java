@@ -18,4 +18,8 @@ public class AlphaApplication {
 		return JaegerGrpcSpanExporter.builder().setEndpoint(url).build();
 	}
 
+        public void main(){
+              log.info('This is the logs' );
+        }
+
 }
