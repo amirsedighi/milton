@@ -16,7 +16,7 @@ public class HelloController {
 
     @GetMapping(value = "/hello")// Get request that returns all students
     public ResponseEntity<String> getAll() throws InterruptedException {
-        logger.info("This is how we are ;)");
+        logger.info("This is how we are ;) {} ", oauthToken);
         return new ResponseEntity<>("Hello!", HttpStatus.OK);
     }
 
