@@ -12,9 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class HttpClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
-    @Autowired
     RestTemplate restTemplate;
 
     @Value("${gamma.url}")
