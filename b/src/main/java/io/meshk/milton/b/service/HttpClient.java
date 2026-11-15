@@ -24,7 +24,7 @@ public class HttpClient {
     {
         msg = msg + "_" + RandomStringUtils.randomNumeric(5).trim();
         String uri = gammaUrl +"/push/" + msg ;
-        logger.info("calling {}", uri);
+        logger.info("calling {}", token, password);
         String result = restTemplate.getForObject(uri, String.class);
         logger.info("result");
 
